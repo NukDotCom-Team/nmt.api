@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 function replace_substr($str, $what, $with){
     $i = 1;
     while (($offset = strpos($str, $what)) !== false) {
@@ -8,10 +9,8 @@ function replace_substr($str, $what, $with){
 }
 require "simple_html_dom.php";
 $days = $_REQUEST['days'];
-try {
+if(group !== "") {
     $group = urldecode($_REQUEST['group']);
-}catch(Exception $e){
-    $group = "";
 }
 $output = file_get_contents("http://www.nmt.edu.ru/index.php?option=com_schedule&view=schedule&days=".$days);
 $html = str_get_html($output);
@@ -36,10 +35,8 @@ if($group == "") {
         $session_processed = replace_substr($session->innertext(), "&nbsp;", "");
         $session_processed = replace_substr($session_processed, "&nbnbsp;", "");
         $session_processed = replace_substr($session_processed, "&nnbsp;", "");
-
         $sessions[$i] = $session_processed;
         $i++;
-
     }
     $sessions_grouped = array();
     $h = 0;
@@ -57,7 +54,6 @@ if($group == "") {
     $sessions_grouped_work = null;
     $sessions8 = null;
     $sessions = null;
-
     $json = array();
     $json['status'] = "200";
     $json['days'] = $days;
@@ -77,10 +73,8 @@ else{
         $session_processed = replace_substr($session->innertext(), "&nbsp;", "");
         $session_processed = replace_substr($session_processed, "&nbnbsp;", "");
         $session_processed = replace_substr($session_processed, "&nnbsp;", "");
-
         $sessions[$i] = $session_processed;
         $i++;
-
     }
     $sessions_grouped = array();
     $h = 0;
@@ -109,13 +103,10 @@ else{
                 $sessions_triplete['number'] = $j+1;
                 $sessions_triplete['session'] = $item['sessions'][$j];
                 $sessions_triplete['auditory'] = $item['auditory'];
-                $sessions_triplete['h_debug'] = $h;
                 $sessions_out_work['record'] = $sessions_triplete;
-
                 $sessions_out[$h] = $sessions_out_work;
                 $h++;
             }
-
         }
         $i++;
     }
